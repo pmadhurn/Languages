@@ -22,31 +22,29 @@ public:
 
     static Node* createLinkedList() {
         Node *head = nullptr, *p = nullptr, *q = nullptr;
-        int size, value;
+        int size;
 
         cout << "Enter the number of nodes you want to create: ";
         cin >> size;
- 
-        cout << "Enter value: " << endl;
-        cin >> value;
 
         head = new Node();
         p = head;
         q = head;
         p->next = nullptr;
         p->previous = nullptr;
-        p->data = value;
+
+        cout << "Enter value: " << endl;
+        cin >> head->data;
+        p->data = head->data;
 
         for (int i = 1; i < size; i++) {
-            cout << "Enter values: " << endl;
-            cin >> value;
-
             p->next = new Node();
             q = p->next;
             q->previous = p;
             p = p->next;
 
-            p->data = value;
+            cout << "Enter values: " << endl;
+            cin >> p->data;
         }
         p->next = nullptr;
         return head;
@@ -89,11 +87,9 @@ public:
     Node* insertAtFirst() {
         Node* head = this;
         Node* p = new Node();
-        int value;
 
         cout << "Enter value: " << endl;
-        cin >> value;
-        p->data = value;
+        cin >> p->data;
         p->next = nullptr;
         p->previous = nullptr;
 
@@ -112,11 +108,9 @@ public:
         Node* head = this;
         Node* p = new Node();
         Node* q = nullptr;
-        int value;
 
         cout << "Enter value: " << endl;
-        cin >> value;
-        p->data = value;
+        cin >> p->data;
         p->next = nullptr;
         p->previous = nullptr;
 
@@ -135,11 +129,10 @@ public:
         Node* head = this;
         Node* p = new Node();
         Node* q = nullptr;
-        int value, location, i = 1;
+        int location, i = 1;
 
         cout << "Enter value: " << endl;
-        cin >> value;
-        p->data = value;
+        cin >> p->data;
         p->next = nullptr;
         p->previous = nullptr;
 
@@ -150,6 +143,8 @@ public:
             cout << "Enter location: " << endl;
             cin >> location;
 
+            if(location <= 0) { cout << "ENTER POSITIVE LOCATION!!" << endl; return head;} 
+
             if(location == 1) {
                 p->next = head;
                 head->previous = p;
@@ -159,9 +154,7 @@ public:
                 p->next = q->next;
                 q->next = p;
                 p->previous = q;
-
             }
-
             return head;
         }
 
@@ -172,16 +165,13 @@ public:
     Node* deleteAtFirst() {
         Node* head = this;
         Node*p = nullptr;
-        int value; 
 
         if (head == nullptr) {
             cout << "LINKED LIST IS EMPTY!!" << endl;
         } else {
             p = head;
             head = p->next;
-
-            value = p->data;
-            cout << value << ": is deleted" << endl;
+            cout << p->data << ": is deleted" << endl;
 
             free(p);
         }
@@ -193,7 +183,6 @@ public:
         Node* head = this;
         Node* p = nullptr;
         Node* q = nullptr;
-        int value;
 
         if (head == nullptr) {
             cout << "LINKED LIST IS EMPTY!!" << endl;
@@ -201,18 +190,14 @@ public:
             if(head->next == nullptr){
                 p = head;
                 head = nullptr;
-
-                value = p->data;
-                cout << value << ": is deleted" << endl;
+                cout << p->data << ": is deleted" << endl;
 
                 free(p);
             } else {
                 for (q = head; q->next->next != nullptr; q = q->next) {}
                 p = q->next;
                 q->next = nullptr;
-
-                value = p->data;
-                cout << value << ": is deleted" << endl;
+                cout << p->data << ": is deleted" << endl;
 
                 free(p);
             }
@@ -221,10 +206,42 @@ public:
         return head;
     }
 
+    Node *deleteAtSpecifiedLocation() {
+        Node *head = this;
+        Node *p = nullptr;
+        Node *q = nullptr;
+        int location, i = 1;
 
+        if (head == nullptr) {
+            cout << "LINKEDLIST IS EMPTY!!" << endl;
+        } else {
+            cout << "Enter location: " << endl;
+            cin >> location;
 
+            if(location <= 0) { cout << "ENTER POSITIVE LOCATION!!" << endl; return head;} 
 
-    // Node* deleteAtSpecifiedLocation() {}
+            if (head->next == nullptr || location == 1) {
+                p = head;
+                head = nullptr;
+                cout << p->data << ": is deleted" << endl;
+                free(p);
+
+            } else {
+                for (q = head; (q->next != nullptr) && (i < location - 1); q = q->next, i++) {}
+                if ((q->next == nullptr) && (i < location)) {
+                    cout << "INVALID LOCATION!!" << endl;
+                } else {
+                    p = q->next;
+                    q->next = p->next;
+                    p->next->previous = q;
+
+                    cout << p->data << ": is deleted" << endl;
+                    free(p);
+                }
+            }
+        }
+        return head;
+    }
 
 };
 
@@ -243,7 +260,7 @@ int main() {
         cout << "7.Insert at Specified Location" << endl;
         cout << "8.Delete at First" << endl;
         cout << "9.Delete at Last" << endl;
-        // cout << "10.Delete at Specified loaction" << endl;
+        cout << "10.Delete at Specified loaction" << endl;
 
         cout << endl << "Enter choice: ";
         cin >> choice;
@@ -258,7 +275,7 @@ int main() {
             case 7: head = head->insertAtSpecifiedLocation(); break;
             case 8: head = head->deleteAtFirst(); break;
             case 9: head = head->deleteAtLast(); break;
-            // case 10: head = head->deleteAtSpecifiedLocation(); break;
+            case 10: head = head->deleteAtSpecifiedLocation(); break;
 
             default: cout << endl<< "ENTER VALID CHOICE" << endl; break;
         }
